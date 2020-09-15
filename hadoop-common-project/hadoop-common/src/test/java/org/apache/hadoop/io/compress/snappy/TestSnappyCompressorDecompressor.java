@@ -318,7 +318,6 @@ public class TestSnappyCompressorDecompressor {
 
   static public void compressDecompressLoop(int rawDataSize) throws IOException {
     DecimalFormat df = new DecimalFormat("#.##");
-
     byte[] rawData = BytesGenerator.get(rawDataSize);
     byte[] compressedResult = new byte[rawDataSize+20];
     int directBufferSize = Math.max(rawDataSize*2, 64*1024);
