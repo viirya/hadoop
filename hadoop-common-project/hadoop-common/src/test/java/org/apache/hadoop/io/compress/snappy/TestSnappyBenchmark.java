@@ -33,10 +33,7 @@ public class TestSnappyBenchmark {
 
         int[] size = { 4 * 1024, 64 * 1024, 128 * 1024, 1024 * 1024 };
         for (int i = 0; i < size.length; i++) {
-            StopWatch sw = new StopWatch().start();
             TestSnappyCompressorDecompressor.compressDecompressLoop(size[i]);
-            long duration = sw.now(TimeUnit.MILLISECONDS);
-            System.out.println("Data size: " + size[i] + ". Total time: " + df.format(duration / 1000.0) + " s.");
         }
     }
 }

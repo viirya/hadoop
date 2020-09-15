@@ -31,7 +31,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.hadoop.io.DataInputBuffer;
 import org.apache.hadoop.io.DataOutputBuffer;
@@ -41,6 +43,7 @@ import org.apache.hadoop.io.compress.CompressionInputStream;
 import org.apache.hadoop.io.compress.CompressionOutputStream;
 import org.apache.hadoop.io.compress.snappy.SnappyDecompressor.SnappyDirectDecompressor;
 import org.apache.hadoop.test.MultithreadedTestUtil;
+import org.apache.hadoop.util.StopWatch;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -314,9 +317,12 @@ public class TestSnappyCompressorDecompressor {
   }
 
   static public void compressDecompressLoop(int rawDataSize) throws IOException {
+    DecimalFormat df = new DecimalFormat("#.##");
+
     byte[] rawData = BytesGenerator.get(rawDataSize);
     byte[] compressedResult = new byte[rawDataSize+20];
     int directBufferSize = Math.max(rawDataSize*2, 64*1024);
+    StopWatch sw = new StopWatch().start();
     SnappyCompressor compressor = new SnappyCompressor(directBufferSize);
     compressor.setInput(rawData, 0, rawDataSize);
     int compressedSize = compressor.compress(compressedResult, 0, compressedResult.length);
@@ -341,6 +347,8 @@ public class TestSnappyCompressorDecompressor {
         outBuf.clear();
       }
     }
+    long duration = sw.now(TimeUnit.MILLISECONDS);
+    System.out.println("Data size: " + rawDataSize + ". Total time: " + df.format(duration / 1000.0) + " s.");
     outBuf.flip();
     while (outBuf.remaining() > 0) {
       assertEquals(expected.get(), outBuf.get());
