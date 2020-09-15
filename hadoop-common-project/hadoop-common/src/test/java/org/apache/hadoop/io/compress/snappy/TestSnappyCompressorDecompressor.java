@@ -313,7 +313,7 @@ public class TestSnappyCompressorDecompressor {
     assertThat(decompressed).isEqualTo(input);
   }
 
-  private void compressDecompressLoop(int rawDataSize) throws IOException {
+  static public void compressDecompressLoop(int rawDataSize) throws IOException {
     byte[] rawData = BytesGenerator.get(rawDataSize);
     byte[] compressedResult = new byte[rawDataSize+20];
     int directBufferSize = Math.max(rawDataSize*2, 64*1024);

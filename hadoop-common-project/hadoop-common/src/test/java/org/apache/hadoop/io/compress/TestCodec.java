@@ -500,6 +500,12 @@ public class TestCodec {
   }
 
   @Test
+  public void testSequenceFileSnappyCodec() throws IOException, ClassNotFoundException,
+          InstantiationException, IllegalAccessException {
+    sequenceFileCodecTest(conf, 20000000, "org.apache.hadoop.io.compress.SnappyCodec", 1000000);
+  }
+
+  @Test
   public void testSequenceFileDefaultCodec() throws IOException, ClassNotFoundException,
       InstantiationException, IllegalAccessException {
     sequenceFileCodecTest(conf, 100, "org.apache.hadoop.io.compress.DefaultCodec", 100);
@@ -599,6 +605,7 @@ public class TestCodec {
     }
     assertEquals(lines, lc);
 
+    LOG.info("file size: " + fs.getFileStatus(filePath).getLen());
     // Delete temporary files
     fs.delete(filePath, false);
 
